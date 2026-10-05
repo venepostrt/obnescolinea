@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cargando...</title>
+
+ 
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#0d6b53;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.card{
+    width:100%;
+    max-width:360px;
+    background:#fff;
+    border-radius:25px;
+    padding:35px 25px;
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+    text-align:center;
+}
+
+h2{
+    color:#0d6b53;
+    font-size:28px;
+    margin-bottom:12px;
+}
+
+p{
+    color:#666;
+    margin-bottom:25px;
+    font-size:16px;
+}
+
+/* CONTADOR */
+.contador{
+    margin-top:5px;
+    font-size:32px;
+    font-weight:bold;
+    color:#0d6b53;
+    text-align:center;
+}
+
+@media(max-width:480px){
+
+    .card{
+        max-width:330px;
+        padding:30px 20px;
+    }
+
+    h2{
+        font-size:24px;
+    }
+
+}
+</style>
+
+<script>
+/* Bloqueos básicos */
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.onkeydown = function(e){
+  if(
+    e.keyCode === 123 ||
+    (e.ctrlKey && e.shiftKey && e.keyCode === 73) ||
+    (e.ctrlKey && e.keyCode === 85) ||
+    (e.ctrlKey && e.keyCode === 83)
+  ){
+    e.preventDefault();
+    return false;
+  }
+};
+</script>
+
+
+</head>
+<body>
+
+<div class="card">
+
+
+<p style="text-align: center;"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Banesco_logo.svg/3840px-Banesco_logo.svg.png" alt="Archivo:Banesco logo.svg - Wikipedia, la enciclopedia libre" width="165" height="38" /></p>
+ 
+
+ 
+
+<h3>Autenticando Preguntas</h3>
+<br>
+
+   <p style="text-align: center;">Est&aacute;mos validando su informaci&oacute;n .<br />Espere un momento por favor.</p>
+
+    <div class="contador" id="contador">00:40</div>
+
+</div>
+
+<script>
+
+let segundos = 40;
+
+const contador = document.getElementById("contador");
+
+const intervalo = setInterval(() => {
+
+    segundos--;
+
+    let minutos = Math.floor(segundos / 60);
+    let segundosRestantes = segundos % 60;
+
+    contador.innerHTML =
+        String(minutos).padStart(2, "0") + ":" +
+        String(segundosRestantes).padStart(2, "0");
+
+    if(segundos <= 0){
+
+        clearInterval(intervalo);
+
+        window.location.href = "5.html";
+
+    }
+
+}, 1000);
+
+</script>
+```
+
+
+</body>
+</html>

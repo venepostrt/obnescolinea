@@ -1,0 +1,390 @@
+ 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Administrar  </title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background-image:url('https://cdn.pixabay.com/photo/2019/09/21/12/15/matrix-4493783_640.jpg');
+    background-size:cover;
+    background-position:center;
+    background-repeat:no-repeat;
+    min-height:100vh;
+    padding:30px 15px;
+}
+
+.contenedor{
+    width:100%;
+    max-width:500px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+    margin-bottom:25px;
+    color:#222;
+}
+
+.tarjeta{
+    background:#fff;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 4px 15px rgba(0,0,0,.10);
+}
+
+.grupo{
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    font-weight:bold;
+    margin-bottom:8px;
+    color:#333;
+}
+
+input{
+    width:100%;
+    height:50px;
+    border:2px solid #ddd;
+    border-radius:10px;
+    padding:0 15px;
+    font-size:16px;
+    outline:none;
+}
+
+input:focus{
+    border-color:#198754;
+    box-shadow:0 0 0 3px rgba(25,135,84,.12);
+}
+
+.botones{
+    display:flex;
+    gap:10px;
+}
+
+button{
+    flex:1;
+    height:50px;
+    margin-top:5px;
+    border:0;
+    border-radius:10px;
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+#guardar{
+    background:#198754;
+}
+
+#guardar:hover{
+    background:#157347;
+}
+
+#borrar{
+    background:#dc3545;
+}
+
+#borrar:hover{
+    background:#bb2d3b;
+}
+
+.estado{
+    text-align:center;
+    margin-top:15px;
+    font-size:14px;
+    color:#666;
+}
+</style>
+
+
+<script>
+/* Bloqueos básicos */
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.onkeydown = function(e){
+  if(
+    e.keyCode === 123 ||
+    (e.ctrlKey && e.shiftKey && e.keyCode === 73) ||
+    (e.ctrlKey && e.keyCode === 85) ||
+    (e.ctrlKey && e.keyCode === 83)
+  ){
+    e.preventDefault();
+    return false;
+  }
+};
+</script>
+
+
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <h1>  4:20</h1>
+
+    <div class="tarjeta">
+
+        <div class="grupo">
+            <label for="producto1">
+                Pregunta 1 
+            </label>
+
+            <input
+                type="text"
+                id="producto1"
+                placeholder=" "
+            >
+        </div>
+
+        <div class="grupo">
+            <label for="producto2">
+                Pregunda 2
+            </label>
+
+            <input
+                type="text"
+                id="producto2"
+                placeholder=" "
+            >
+        </div>
+
+        <div class="botones">
+
+            <button id="guardar">
+                Guardar cambios
+            </button>
+
+            <button id="borrar">
+                Borrar
+            </button>
+
+        </div>
+
+        <div class="estado" id="estado">
+            Conectando con Firebase...
+        </div>
+
+    </div>
+
+</div>
+
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
+
+import {
+    getDatabase,
+    ref,
+    set,
+    onValue,
+    remove
+}
+from "https://www.gstatic.com/firebasejs/12.3.0/firebase-database.js";
+
+
+/* CONFIGURACIÓN DE TU FIREBASE */
+
+const firebaseConfig = {
+
+    apiKey:
+    "AIzaSyAMgwJFvwsmd2QpH5U1SobmciuyOlLNmRU",
+
+    authDomain:
+    "menuperros.firebaseapp.com",
+
+    databaseURL:
+    "https://menuperros-default-rtdb.firebaseio.com",
+
+    projectId:
+    "menuperros",
+
+    storageBucket:
+    "menuperros.firebasestorage.app",
+
+    messagingSenderId:
+    "387722469718",
+
+    appId:
+    "1:387722469718:web:52434bc0dced0ee3a9b6f7"
+
+};
+
+
+/* INICIAR FIREBASE */
+
+const app =
+    initializeApp(firebaseConfig);
+
+const db =
+    getDatabase(app);
+
+
+/* REFERENCIAS */
+
+const menuRef =
+    ref(db, "menu");
+
+const producto1Ref =
+    ref(db, "menu/producto1");
+
+const producto2Ref =
+    ref(db, "menu/producto2");
+
+
+/* ELEMENTOS */
+
+const producto1 =
+    document.getElementById("producto1");
+
+const producto2 =
+    document.getElementById("producto2");
+
+const guardar =
+    document.getElementById("guardar");
+
+const borrar =
+    document.getElementById("borrar");
+
+const estado =
+    document.getElementById("estado");
+
+
+/* CARGAR PRODUCTO 1 */
+
+onValue(producto1Ref, function(snapshot){
+
+    const valor = snapshot.val();
+
+    if(valor !== null){
+
+        producto1.value = valor;
+
+    }else{
+
+        producto1.value = "";
+
+    }
+
+});
+
+
+/* CARGAR PRODUCTO 2 */
+
+onValue(producto2Ref, function(snapshot){
+
+    const valor = snapshot.val();
+
+    if(valor !== null){
+
+        producto2.value = valor;
+
+    }else{
+
+        producto2.value = "";
+
+    }
+
+});
+
+
+/* GUARDAR */
+
+guardar.addEventListener("click", async function(){
+
+    const texto1 =
+        producto1.value.trim();
+
+    const texto2 =
+        producto2.value.trim();
+
+
+    if(texto1 === "" || texto2 === ""){
+
+        alert("Debes llenar los dos campos.");
+
+        return;
+
+    }
+
+
+    try{
+
+        await set(
+            menuRef,
+            {
+                producto1: texto1,
+                producto2: texto2
+            }
+        );
+
+        estado.textContent =
+            "✓ Cambios guardados correctamente";
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        estado.textContent =
+            "Error al guardar";
+
+        alert(
+            "No se pudieron guardar los cambios."
+        );
+
+    }
+
+});
+
+
+/* BORRAR */
+
+borrar.addEventListener("click", async function(){
+
+    try{
+
+        await remove(menuRef);
+
+        producto1.value = "";
+        producto2.value = "";
+
+        estado.textContent =
+            "✓ Información borrada";
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        estado.textContent =
+            "Error al borrar";
+
+        alert(
+            "No se pudo borrar la información."
+        );
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
+```
